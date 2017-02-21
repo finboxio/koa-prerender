@@ -1,4 +1,10 @@
 
+5.0.1 / 2017-02-21
+==================
+
+  * update test to log on first test
+  * remove debug environment variable and use log option
+
 5.0.0 / 2017-02-21
 ==================
 
