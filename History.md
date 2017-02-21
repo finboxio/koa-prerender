@@ -1,4 +1,18 @@
 
+5.0.0 / 2017-02-21
+==================
+
+  * update readme
+  * Merge pull request #4 from finboxio/improve-support
+  * remove arrow functions
+  * add option to pass through original user agent
+  * test clean up
+  * better loggin and debug switch
+  * upgrade packages
+  * add support for duckduckbot sogou exabot ia_archiver facebot
+  * Merge pull request #3 from leesiongchan/patch-1
+  * Update engines in packages.json
+
 4.0.2 / 2016-07-31
 ==================
 

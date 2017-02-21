@@ -1,6 +1,6 @@
 {
   "name": "bot-koa-prerender",
-  "version": "4.0.2",
+  "version": "5.0.0",
   "description": "send bot requests through prerender.io for koajs",
   "main": "index.js",
   "scripts": {
