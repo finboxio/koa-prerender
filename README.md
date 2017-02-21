@@ -30,8 +30,9 @@ var prerender = require('bot-koa-prerender');
 var options = {
   prerender: PRERENDER_SERVER_URL   // optional, default:'http://service.prerender.io/'
   protocol: 'http',                 // optional, default: this.protocol
-  host: 'www.risingstack.com'       // optional, default: this.host,
-  prerender_token: ''                // optional or process.env.PRERENDER_TOKEN
+  host: 'www.risingstack.com',      // optional, default: this.host,
+  user_agent_passthrough: false,    // optional, default: undefined,
+  prerender_token: ''               // optional or process.env.PRERENDER_TOKEN
 };
 
 // Use as middleware
