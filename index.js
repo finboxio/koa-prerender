@@ -7,6 +7,7 @@
 
 var url = require('url')
 var axios = require('axios')
+var debug = process.env.DEBUG
 
 var extensions_to_ignore = [
   '.js',
@@ -72,7 +73,12 @@ var crawlers = [
   'redditbot',
   'Applebot',
   'WhatsApp',
-  'flipboard'
+  'flipboard',
+  'duckduckbot',
+  'sogou',
+  'exabot',
+  'ia_archiver',
+  'facebot'
 ]
 
 var DEFAULT_PRERENDER = 'http://service.prerender.io/'
@@ -87,11 +93,14 @@ var DEFAULT_PRERENDER = 'http://service.prerender.io/'
 
 function should_pre_render (options) {
   var has_extension_to_ignore = extensions_to_ignore
-    .some(extension => ~options.url.indexOf(extension))
+    .some(function (extension) {
+      return ~options.url.indexOf(extension)
+    })
 
   // do not pre-rend when:
   if (!options.userAgent) return false
   if (options.method !== 'GET') return false
+  if (options.prerenderAgent) return false
   if (has_extension_to_ignore) return false
 
   // do pre-render when:
@@ -121,6 +130,7 @@ module.exports = function pre_render_middleware (options) {
   return function * pre_render(next) {
     var protocol = options.protocol || this.protocol
     var host = options.host || this.host
+    var ua_passthrough = options.user_agent_passthrough
     var headers = { 'User-Agent': this.accept.headers['user-agent'] }
 
     var token = options.prerender_token || process.env.PRERENDER_TOKEN
@@ -130,6 +140,7 @@ module.exports = function pre_render_middleware (options) {
     var yes_pre_render = should_pre_render({
       userAgent: this.get('user-agent'),
       bufferAgent: this.get('x-bufferbot'),
+      prerenderAgent: ua_passthrough && this.get('x-prerender'),
       method: this.method,
       url: this.url
     })
@@ -141,13 +152,13 @@ module.exports = function pre_render_middleware (options) {
       var response = yield axios({
         url: pre_render_url,
         headers: headers
-      }).catch((e) => {
-        console.error(e)
+      }).catch(function (e) {
+        if (debug) console.error(e.message)
         return { data: '' }
       })
 
       var body = response.data
-      if (!body) console.error('No response received :(')
+      if (!body && debug) console.error('No response received :(')
       if (options.log) console.log('pre-render...%s, %s', render_url, JSON.stringify(headers))
 
       yield* next
@@ -162,7 +173,12 @@ module.exports = function pre_render_middleware (options) {
 }
 
 function is_bot (user_agent) {
-  return crawlers.some((crawler) => {
-    return ~user_agent.toLowerCase().indexOf(crawler)
-  })
+  return crawlers.some(check_ua(user_agent))
+}
+
+function check_ua (user_agent) {
+  return function (crawler) {
+    return ~user_agent.toLowerCase()
+      .indexOf(crawler)
+  }
 }
