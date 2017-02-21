@@ -7,7 +7,6 @@
 
 var url = require('url')
 var axios = require('axios')
-var debug = process.env.DEBUG
 
 var extensions_to_ignore = [
   '.js',
@@ -153,12 +152,12 @@ module.exports = function pre_render_middleware (options) {
         url: pre_render_url,
         headers: headers
       }).catch(function (e) {
-        if (debug) console.error(e.message)
+        if (options.log) console.error(e.message)
         return { data: '' }
       })
 
       var body = response.data
-      if (!body && debug) console.error('No response received :(')
+      if (!body && options.log) console.error('No response received :(')
       if (options.log) console.log('pre-render...%s, %s', render_url, JSON.stringify(headers))
 
       yield* next
