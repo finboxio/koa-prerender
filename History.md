@@ -1,4 +1,10 @@
 
+5.1.0 / 2017-02-21
+==================
+
+  * update readme
+  * remove bufferbots from crawlers list; remove user_agent_passthrough option
+
 5.0.1 / 2017-02-21
 ==================
 
