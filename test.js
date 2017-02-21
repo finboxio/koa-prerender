@@ -13,7 +13,7 @@ describe('Koa prerender middleware', function() {
   describe('prerenders when', function() {
     it('url contains _escaped_fragment_', function (done) {
       var app = koa()
-      app.use(prerender())
+      app.use(prerender({ log: true }))
 
       var server = app.listen()
       request(server)
